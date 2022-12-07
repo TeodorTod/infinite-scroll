@@ -1,23 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import { useCallback, useEffect, useState } from 'react';
+import { Virtuoso } from 'react-virtuoso';
+import { apiKey } from './apiKey';
 
 function App() {
+  const headers = {
+    "Content-Type": "application/json",
+    "api_key": apiKey
+  }
+
+  const BASE_URL = `https://petstore.swagger.io/v2/pet/findByStatus?status=available`
+
+  const [photos, setPhotos] = useState([])
+
+  const getPhotos = useCallback(async () => {
+    const response = await fetch(BASE_URL, { headers })
+    const data = await response.json()
+    setPhotos((prevState) => [...prevState, ...data])
+  }, [setPhotos])
+
+  useEffect(() => {
+    getPhotos().catch(console.error)
+  }, [getPhotos])
+
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ width: "100vw", height: "90vh", textAlign: "center" }}>
+      <h1>React Inifinite Scroll Virtuoso</h1>
+      <Virtuoso
+        data={photos}
+        endReached={getPhotos}
+        overscan={200}
+        itemContent={(index, photo) => {
+          return <h1>{photo.id}</h1>
+          // <img key={index} src={photo.urls.small} alt={`Photo ${index}`} />
+        }}
+      />
     </div>
   );
 }
