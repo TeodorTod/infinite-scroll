@@ -11,7 +11,7 @@ function App() {
     "api_key": apiKey
   };
 
-  const BASE_URL = `https://petstore.swagger.io/v2/pet/findByStatus?status=available&count=5`;
+  const BASE_URL = `https://petstore.swagger.io/v2/pet/findByStatus?status=available&count=10`;
 
   function dogsHandler() {
     fetch('https://dog.ceo/api/breeds/image/random')
